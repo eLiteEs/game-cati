@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cati</title>
+    <title>Cat Game</title>
     <style>
         body {
             font-family: monospace;
             background-color: black;
             color: white;
             font-size: 20px;
+            user-select: none;
         }
         .cat-line {
             position: absolute;
@@ -51,6 +52,23 @@
             text-decoration: underline;
             margin-bottom: 10px;
         }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .control-row {
+            display: flex;
+            justify-content: center;
+        }
+        .control-key {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid grey;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +81,20 @@
     <span id="lives" style="position:fixed;top:0px;left:200px;">Lives: <span id="hearts" style="position:fixed;top:0px;left:270px;"></span></span>
     <div id="gameover" style="display:none;height: 200px;width: 600px;text-align: center;   position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);">
         <span style="text-decoration: underline;font-weight: bold;">Game Over</span>
+    </div>
+    
+    <div class="controls">
+        <div class="control-row">
+            <div class="control-key" onclick="move('w')">w</div>
+        </div>
+        <div class="control-row">
+            <div class="control-key" onclick="move('a')">a</div>
+            <div class="control-key" onclick="move('s')">s</div>
+            <div class="control-key" onclick="move('d')">d</div>
+        </div>
+        <div class="control-row">
+            <div class="control-key" onclick="move(' ')">_</div>
+        </div>
     </div>
     
     <script>
@@ -215,31 +247,30 @@
         const arrowsInterval = setInterval(generateArrow, 1000); // Generate arrows every 1 second
         const gameInterval = setInterval(updateGame, 100); // Update game every 100ms
 
-        document.addEventListener("keypress", (event) => {
-            const key = event.key.toLowerCase();
-            switch (key) {
-                case "w":
+        function move(direction) {
+            switch (direction) {
+                case 'w':
                     if (catY > 0) catY -= 20;
                     break;
-                case "s":
+                case 's':
                     if (catY + 20 < 504) catY += 20;
                     break;
-                case "a":
+                case 'a':
                     if (catX > 0) catX -= 9;
                     break;
-                case "d":
+                case 'd':
                     if (catX < 580) catX += 9;
                     break;
-                case " ":
+                case ' ':
                     catX = Math.floor(Math.random() * 28) * 20;
                     catY = Math.floor(Math.random() * 9) * 20;
                     lives -= 0.5;
                     break;
-                case "q":
+                case 'q':
                     location.reload();
                     break;
             }
-        });
+        }
     </script>
 </body>
 </html>
