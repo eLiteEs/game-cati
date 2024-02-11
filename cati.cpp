@@ -193,7 +193,7 @@ int main() {
                 setBackgroundColor();
                 std::cout << " w" << std::endl;
                 gotoxy(70, 6);
-                std::cout << "a s " << ASCII_REVERSE << "d" << ASCII_RESET;
+                std::cout << "a s " << "d" << ASCII_RESET;
                 setBackgroundColor();
                 break;
             case 'q':
