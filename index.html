@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Game</title>
+    <title>Cati</title>
     <style>
         body {
             font-family: monospace;
@@ -120,7 +120,7 @@
         let fruitX = Math.floor(Math.random() * 744);
         let fruitY = Math.floor(Math.random() * 504);
         let arrows = [];
-
+    
         function isHitting() {
             return (
                 fruitX >= catX &&
@@ -129,7 +129,7 @@
                 fruitY <= catY - 1 + 3 * 20
             );
         }
-
+    
         function drawFruit() {
             fruitY = Math.floor(Math.random() * 504 - 20 * 3);
             fruitX = Math.floor(Math.random() * 744 - 9 * 7);
@@ -142,9 +142,9 @@
                 drawFruit();
             }
         }
-
+    
         drawFruit();
-
+    
         function generateArrow() {
             if (Math.floor(Math.random() * 2) === 0) { // Less frequent appearance
                 const arrow = document.createElement("div");
@@ -183,7 +183,7 @@
                 arrows.push(arrow);
             }
         }
-
+    
         function updateGame() {
             document.querySelectorAll(".cat-line").forEach((line, index) => {
                 if (index === 0) {
@@ -197,23 +197,23 @@
                     line.style.left = `${catX}px`;
                 }
             });
-
+    
             if (isHitting()) {
                 score++;
                 document.getElementById("scoreboard").innerHTML = "Score: " + score;
                 drawFruit();
-                if(lives + 1 <= 9) {
+                if (lives + 1 <= 9) {
                     lives += 1; // Gain 1 life when touching a fruit
-                }    
+                }
             }
-
+    
             arrows.forEach((arrow, index) => {
                 arrow.style.left = parseInt(arrow.style.left) - 8 + "px"; // Change arrow speed here
                 if (parseInt(arrow.style.left) < 0) {
                     arrow.remove();
                     arrows.splice(index, 1);
                 }
-
+    
                 if (
                     catX <= parseInt(arrow.style.left) &&
                     catX + 7 * 9 >= parseInt(arrow.style.left) &&
@@ -225,25 +225,20 @@
                     arrows.splice(index, 1);
                 }
             });
-
+    
             updateHearts();
-
+    
             if (lives <= 0) {
                 clearInterval(arrowsInterval);
                 clearInterval(gameInterval);
-               
+    
                 document.getElementById("gameover").style.display = "";
                 document.addEventListener("keypress", () => {
                     location.reload();
                 });
             }
-
-            
         }
-        document.addEventListener("keydown", (e) => {
-                move(e.key)
-        })
-
+    
         function updateHearts() {
             const heartContainer = document.getElementById("hearts");
             heartContainer.innerHTML = "";
@@ -263,34 +258,71 @@
                 heartContainer.appendChild(heart);
             }
         }
-
+    
         const arrowsInterval = setInterval(generateArrow, 1000); // Generate arrows every 1 second
         const gameInterval = setInterval(updateGame, 100); // Update game every 100ms
-
-        function move(direction) {
-            switch (direction) {
-                case 'w':
+    
+        document.addEventListener("keydown", (event) => {
+            switch (event.key) {
+                case "w":
                     if (catY > 0) catY -= 20;
                     break;
-                case 's':
+                case "s":
                     if (catY + 20 < 504) catY += 20;
                     break;
-                case 'a':
+                case "a":
                     if (catX > 0) catX -= 9;
                     break;
-                case 'd':
+                case "d":
                     if (catX < 580) catX += 9;
                     break;
-                case ' ':
+                case " ":
                     catX = Math.floor(Math.random() * 28) * 20;
                     catY = Math.floor(Math.random() * 9) * 20;
                     lives -= 0.5;
                     break;
-                case 'q':
+                case "q":
                     location.reload();
                     break;
             }
-        }
+        });
+    
+        // Touch events for mobile devices
+        let touchStartY = null;
+        let touchStartX = null;
+    
+        document.addEventListener("touchstart", (event) => {
+            touchStartY = event.touches[0].clientY;
+            touchStartX = event.touches[0].clientX;
+        });
+    
+        document.addEventListener("touchmove", (event) => {
+            if (!touchStartY || !touchStartX) return;
+    
+            const deltaY = event.touches[0].clientY - touchStartY;
+            const deltaX = event.touches[0].clientX - touchStartX;
+    
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                if (deltaY > 0) {
+                    // Swipe down
+                    if (catY + 20 < 504) catY += 20;
+                } else {
+                    // Swipe up
+                    if (catY > 0) catY -= 20;
+                }
+            } else {
+                if (deltaX > 0) {
+                    // Swipe right
+                    if (catX < 580) catX += 9;
+                } else {
+                    // Swipe left
+                    if (catX > 0) catX -= 9;
+                }
+            }
+    
+            touchStartY = null;
+            touchStartX = null;
+        });
     </script>
 </body>
 </html>
