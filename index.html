@@ -3,28 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cati</title>
+    <title>Cat Game</title>
     <style>
         body {
             font-family: monospace;
             background-color: black;
             color: white;
             font-size: 20px;
-            user-select:none;
+            user-select: none; /* Disable text selection */
         }
+    
         .cat-line {
             position: absolute;
             font-size: 20px;
         }
+    
         .arrow {
             color: white;
             position: fixed;
             font-size: 20px;
         }
+    
         .heart {
             color: red;
             animation: blink-animation 1s infinite;
         }
+    
         @keyframes blink-animation {
             0% {
                 opacity: 1;
@@ -36,6 +40,7 @@
                 opacity: 1;
             }
         }
+    
         .game-over {
             position: fixed;
             top: 50%;
@@ -47,27 +52,37 @@
             border-right-width: 8px;
             text-align: center;
         }
+    
         .game-over-message {
             font-weight: bold;
             text-decoration: underline;
             margin-bottom: 10px;
         }
+    
         .controls {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
         }
+    
         .control-row {
             display: flex;
             justify-content: center;
         }
+    
         .control-key {
             margin: 5px;
             padding: 10px;
             border: 1px solid grey;
             border-radius: 5px;
             cursor: pointer;
+        }
+    
+        @media only screen and (max-width: 600px) {
+            body {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
