@@ -10,7 +10,6 @@
             background-color: black;
             color: white;
             font-size: 20px;
-            user-select: none;
         }
         .cat-line {
             position: absolute;
@@ -222,7 +221,12 @@
                     location.reload();
                 });
             }
+
+            
         }
+        document.addEventListener("keydown", (e) => {
+                move(e.key)
+        })
 
         function updateHearts() {
             const heartContainer = document.getElementById("hearts");
