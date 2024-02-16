@@ -80,7 +80,7 @@
 <span class="cat-line" style="top: 00px; left: 0px;">&nbsp;/\_/\<br/></span>
 <span class="cat-line" style="top: 12px; left: 0px;">( o.o )<br/></span>
 <span class="cat-line" style="top: 34px; left: 0px;">&nbsp;> ^ <</span>
-<div id="fruit" style="color:green;position: fixed;font-size:20px;">♣</div>
+<div id="fruit" style="z-index:100;color:green;position: fixed;font-size:20px;">♣</div>
 <span id="scoreboard">Score: 0</span>
 <div id="hearts"></div>
 <span id="lives">Lives: </span>
@@ -89,13 +89,13 @@
     <div style="margin-top: 20px;">Press any key to try again.</div>
 </div>
 
-<div class="controls">
-    <button class="control-button" onclick="moveCat('w')">W</button><br>
-    <button class="control-button" onclick="moveCat('a')">A</button>
-    <button class="control-button" onclick="moveCat('s')">S</button>
-    <button class="control-button" onclick="moveCat('d')">D</button><br>
+<div class="controls" style="width: 202px;">
+    <button class="control-button" style="width: 50px;" onclick="moveCat('w')">W</button><br>
+    <button class="control-button" style="width: 50px;" onclick="moveCat('a')">A</button>
+    <button class="control-button"  style="width: 50px;"onclick="moveCat('s')">S</button>
+    <button class="control-button"  style="width: 50px;"onclick="moveCat('d')">D</button><br>
     <button class="control-button" onclick="moveCat(' ')" style="width: 80px;">Space</button>
-    <button class="control-button" onclick="togglePause()">P</button>
+    <button class="control-button"  style="width: 50px;"onclick="togglePause()">P</button>
 </div>
 
 <script>
