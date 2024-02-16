@@ -25,17 +25,6 @@
             color: red;
             animation: blink-animation 1s infinite;
         }
-        @keyframes blink-animation {
-            0% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
         .game-over {
             position: fixed;
             top: 50%;
@@ -68,6 +57,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        #hearts {
+            position: fixed;
+            top: 0px;
+            left: 280px;
+        }
+        #lives {
+            position: fixed;
+            top: 0px;
+            left: 200px;
+            color: white;
+        }
+        #scoreboard {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+        }
     </style>
 </head>
 <body>
@@ -76,8 +81,9 @@
 <span class="cat-line" style="top: 12px; left: 0px;">( o.o )<br/></span>
 <span class="cat-line" style="top: 34px; left: 0px;">&nbsp;> ^ <</span>
 <div id="fruit" style="color:green;position: fixed;font-size:20px;">♣</div>
-<span id="scoreboard" style="position:fixed;top:0px;left:0px;">Score: 0</span>
-<span id="lives" style="position:fixed;top:0px;left:200px;">Lives: <span id="hearts" style="position:fixed;top:0px;left:270px;"></span></span>
+<span id="scoreboard">Score: 0</span>
+<div id="hearts"></div>
+<span id="lives">Lives: </span>
 <div id="gameover" style="display:none;height: 200px;width: 600px;text-align: center;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);">
     <span style="text-decoration: underline;font-weight: bold;">Game Over</span>
     <div style="margin-top: 20px;">Press any key to try again.</div>
@@ -89,6 +95,7 @@
     <button class="control-button" onclick="moveCat('s')">S</button>
     <button class="control-button" onclick="moveCat('d')">D</button><br>
     <button class="control-button" onclick="moveCat(' ')" style="width: 80px;">Space</button>
+    <button class="control-button" onclick="togglePause()">P</button>
 </div>
 
 <script>
@@ -99,6 +106,7 @@
     let fruitX = 0;
     let fruitY = 0;
     let arrows = [];
+    let isPaused = false;
 
     // Determine device type
     const deviceType = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
@@ -115,6 +123,15 @@
         gameHeight = 500;
         maxFruitX = 600 - 40;
         maxFruitY = 500 - 80;
+        // Add key event listeners for desktop users
+        document.addEventListener("keydown", function(event) {
+           if (event.key === "p" || event.key === "P") {
+                togglePause();
+            } else {
+                moveCat(event.key);
+            }
+        });
+        document.querySelectorAll(".controls").forEach(con => con.outerHTML = "");
     }
 
     function isHitting() {
@@ -136,6 +153,42 @@
     drawFruit();
 
     function generateArrow() {
+        if (Math.floor(Math.random() * 35) === 0) { // Less frequent appearance
+            const arrow = document.createElement("div");
+            arrow.className = "arrow";
+            arrow.innerText = ">";
+            arrow.style.left = gameWidth + "px";
+            arrow.style.top = Math.floor(Math.random() * maxFruitY) + "px"; // Ensure arrow is within visible area
+            document.body.appendChild(arrow);
+            arrows.push(arrow);
+        }
+        if (Math.floor(Math.random() * 35) === 0) { // Less frequent appearance
+            const arrow = document.createElement("div");
+            arrow.className = "arrow";
+            arrow.innerText = ">";
+            arrow.style.left = gameWidth + "px";
+            arrow.style.top = Math.floor(Math.random() * maxFruitY) + "px"; // Ensure arrow is within visible area
+            document.body.appendChild(arrow);
+            arrows.push(arrow);
+        }
+        if (Math.floor(Math.random() * 35) === 0) { // Less frequent appearance
+            const arrow = document.createElement("div");
+            arrow.className = "arrow";
+            arrow.innerText = ">";
+            arrow.style.left = gameWidth + "px";
+            arrow.style.top = Math.floor(Math.random() * maxFruitY) + "px"; // Ensure arrow is within visible area
+            document.body.appendChild(arrow);
+            arrows.push(arrow);
+        }
+        if (Math.floor(Math.random() * 35) === 0) { // Less frequent appearance
+            const arrow = document.createElement("div");
+            arrow.className = "arrow";
+            arrow.innerText = ">";
+            arrow.style.left = gameWidth + "px";
+            arrow.style.top = Math.floor(Math.random() * maxFruitY) + "px"; // Ensure arrow is within visible area
+            document.body.appendChild(arrow);
+            arrows.push(arrow);
+        }
         if (Math.floor(Math.random() * 2) === 0) { // Less frequent appearance
             const arrow = document.createElement("div");
             arrow.className = "arrow";
@@ -148,112 +201,215 @@
     }
 
     function updateGame() {
-        document.querySelectorAll(".cat-line").forEach((line, index) => {
-            if (index === 0) {
-                line.style.top = `${catY}px`;
-                line.style.left = `${catX}px`;
-            } else if (index === 1) {
-                line.style.top = `${catY + 20}px`;
-                line.style.left = `${catX}px`;
-            } else if (index === 2) {
-                line.style.top = `${catY + 40}px`;
-                line.style.left = `${catX}px`;
-            }
-        });
+        if (!isPaused) {
 
-        if (isHitting()) {
-            score++;
-            document.getElementById("scoreboard").innerHTML = "Score: " + score;
-            drawFruit();
-            if (lives + 1 <= 9) {
-                lives += 1; // Gain 1 life when touching a fruit
+            document.querySelectorAll(".cat-line").forEach((line, index) => {
+                if (index === 0) {
+                    line.style.top = `${catY}px`;
+                    line.style.left = `${catX}px`;
+                } else if (index === 1) {
+                    line.style.top = `${catY + 20}px`;
+                    line.style.left = `${catX}px`;
+                } else if (index === 2) {
+                    line.style.top = `${catY + 40}px`;
+                    line.style.left = `${catX}px`;
+                }
+            });
+
+            if (isHitting()) {
+                score++;
+                document.getElementById("scoreboard").innerHTML = "Score: " + score;
+                drawFruit();
+                if (lives + 1 <= 13) { // Limit hearts to 13
+                    lives += 1; // Gain 1 life when touching a fruit
+                }
+            }
+
+
+            if (Math.floor(Math.random() * 100) == 0) {
+                generateArrow();
             }
         }
+    }
 
+    function moveArrows() {
         arrows.forEach((arrow, index) => {
-            arrow.style.left = parseInt(arrow.style.left) - 8 + "px"; // Change arrow speed here
-            if (parseInt(arrow.style.left) < 0) {
-                arrow.remove();
-                arrows.splice(index, 1);
+                arrow.style.left = parseInt(arrow.style.left) - 9 + "px"; // Arrows move every 100ms, 9px to the left
+                if (parseInt(arrow.style.left) + 20 <= 0) {
+                    arrow.remove();
+                    arrows.splice(index, 1);
+                }
+
+                if (
+                    parseInt(arrow.style.left) >= catX &&
+                    parseInt(arrow.style.top) >= catY - 1 &&
+                    parseInt(arrow.style.left) <= catX + 7 * 9 &&
+                    parseInt(arrow.style.top) <= catY - 1 + 3 * 20
+                ){
+                    lives -= 1; // Lose 1 life when touching an arrow
+                    arrow.remove();
+                    arrows.splice(index, 1);
+                    if (lives <= 0) {
+                        isPaused;
+                        clearInterval(intervalArrows);
+                        clearInterval(intervalGame);
+                        clearInterval(intervalHearts);
+                        clearInterval(intervalScore);
+                        gameOver();
+                    }
+                }
+            });
+    }
+
+    function moveCat(direction) {
+        if (!isPaused) {
+            if (direction === "w" && catY > 0) {
+                catY -= 20;
+            } else if (direction === "a" && catX > 0) {
+                catX -= 9;
+            } else if (direction === "s" && catY + 60 < gameHeight) {
+                catY += 20;
+            } else if (direction === "d" && catX + 20 < gameWidth) {
+                catX += 9;
             }
 
-            if (
-                catX <= parseInt(arrow.style.left) &&
-                catX + 7 * 9 >= parseInt(arrow.style.left) &&
-                catY - 1 <= parseInt(arrow.style.top) &&
-                catY - 1 + 3 * 20 >= parseInt(arrow.style.top)
-            ) {
-                lives -= 0.5;
-                arrow.remove();
-                arrows.splice(index, 1);
+            if (direction === " ") { // Spacebar action
+                if (lives > 0) {
+                    catX = Math.floor(Math.random() * maxFruitX); // Teleport player to a random location
+                    catY = Math.floor(Math.random() * maxFruitY);
+                    lives -= 0.5; // Subtract 0.5 life
+                    updateScore();
+                } else {
+                    resetGame();
+                }
             }
-        });
 
-        updateHearts();
+            updateGame();
+        }
+    }
 
-        if (lives <= 0) {
-            clearInterval(arrowsInterval);
-            clearInterval(gameInterval);
+    function togglePause() {
+        isPaused = !isPaused;
+        if (isPaused) {
+            document.getElementById("gameover").style.display = "block";
+            document.getElementById("gameover").style.top = window.innerHeight / 2 - 100 + "px";
+            document.getElementById("gameover").style.left = window.innerWidth / 2 - 300 + "px";
+            document.getElementById("gameover").style.width = "600px";
+            document.getElementById("gameover").style.height = "200px";
+            document.getElementById("gameover").innerHTML = `
+                <span class="game-over-message">Game Paused</span>
+                <div>Press P to resume.</div>
+            `;
+            
+            clearInterval(intervalArrows);
+            clearInterval(intervalGame);
+            clearInterval(intervalHearts);
+            clearInterval(intervalScore);
+        } else {
+            document.getElementById("gameover").style.display = "none";
+            intervalHearts = setInterval(updateHearts, 10); // Update hearts every 100ms
 
-            document.getElementById("gameover").style.display = "";
-            document.addEventListener("keydown", () => {
-                location.reload();
+            intervalScore = setInterval(updateScore, 10); // Update score every 100ms
+
+            intervalGame = setInterval(updateGame, 10); // Update game every 50ms
+
+            intervalArrows = setInterval(moveArrows, 100)
+        }
+    }
+
+    function gameOver() {
+        document.getElementById("gameover").style.display = "block";
+        document.getElementById("gameover").style.top = window.innerHeight / 2 - 100 + "px";
+        document.getElementById("gameover").style.left = window.innerWidth / 2 - 300 + "px";
+        document.getElementById("gameover").style.width = "600px";
+        document.getElementById("gameover").style.height = "200px";
+        if (deviceType === 'mobile') {
+            document.getElementById("gameover").innerHTML = `
+                <span class="game-over-message">Game Over</span>
+                <div>Score: ${score}</div>
+                <div>Tap the screen to try again.</div>
+            `;
+        } else {
+            document.getElementById("gameover").innerHTML = `
+                <span class="game-over-message">Game Over</span>
+                <div>Score: ${score}</div>
+                <div>Press any key to try again.</div>
+            `;
+        }
+        if (deviceType === 'mobile') {
+            document.addEventListener("touchstart", function() {
+                resetGame();
+                document.removeEventListener("touchstart", arguments.callee);
+            });
+        } else {
+            document.addEventListener("keypress", function() {
+                resetGame();
+                document.removeEventListener("keydown", arguments.callee);
             });
         }
     }
 
+    function resetGame() {
+       window.reloadPage()
+       window.reload()
+    }
+
+    // Update the hearts display
     function updateHearts() {
         const heartContainer = document.getElementById("hearts");
         heartContainer.innerHTML = "";
-        const fullHearts = Math.floor(lives);
-        const halfHeart = lives % 1 !== 0;
-        for (let i = 0; i < fullHearts; i++) {
-            const heart = document.createElement("span");
-            heart.textContent = "♥";
-            heart.className = "heart";
-            heartContainer.appendChild(heart);
-        }
-        if (halfHeart) {
-            const heart = document.createElement("span");
-            heart.textContent = "♥";
-            heart.className = "heart";
-            heart.style.animation = "blink-animation 1s infinite";
-            heartContainer.appendChild(heart);
-        }
-    }
-
-    const arrowsInterval = setInterval(generateArrow, 1000); // Generate arrows every 1 second
-    const gameInterval = setInterval(updateGame, 100); // Update game every 100ms
-
-    document.addEventListener("keypress", (e) => {
-        moveCat(e.key)
-    })
-
-
-    function moveCat(direction) {
-        switch (direction) {
-            case "w":
-                if (catY > 0) catY -= 20;
-                break;
-            case "s":
-                if (catY + 20 < gameHeight - 20) catY += 20; // Limit movement within visible area
-                break;
-            case "a":
-                if (catX > 0) catX -= 9;
-                break;
-            case "d":
-                if (catX < gameWidth - 60) catX += 9; // Limit movement within visible area
-                break;
-            case " ":
-                catX = Math.floor(Math.random() * (gameWidth / 20)) * 20;
-                catY = Math.floor(Math.random() * (gameHeight / 20)) * 20;
-                lives -= 0.5;
-                break;
-            case "q":
-                location.reload();
-                break;
+        const fullHearts = Math.min(Math.floor(lives), 13); // Limit hearts to 13
+        if(deviceType == "desktop") {
+            const halfHeart = lives % 1 !== 0;
+            for (let i = 0; i < fullHearts; i++) {
+                const heart = document.createElement("span");
+                heart.textContent = "♥";
+                heart.style.color = "red";
+                heart.style.fontSize = "25px";
+                heartContainer.appendChild(heart);
+            }
+            if (halfHeart) {
+                const heart = document.createElement("span");
+                heart.textContent = "♥";
+                heart.style.animation = "blink-animation 1s infinite";
+                heart.style.color = "red";
+                heart.style.fontSize = "25px";
+                heartContainer.appendChild(heart);
+            }
+        } else {
+            heartContainer.innerText = lives;
         }
     }
+
+    // Update the score display
+    function updateScore() {
+        document.getElementById("scoreboard").innerHTML = "Score: " + score;
+    }
+
+    // Animation for heart blinking
+    document.head.innerHTML += `
+        <style>
+            @keyframes blink-animation {
+                0% {opacity: 0;}
+                50% {opacity: 1;}
+                100% {opacity: 0;}
+            }
+        </style>
+    `;
+
+    // Initial display of hearts and score
+    updateHearts();
+    updateScore();
+
+    // Game loop
+    let intervalHearts = setInterval(updateHearts, 10); // Update hearts every 100ms
+
+    let intervalScore = setInterval(updateScore, 10); // Update score every 100ms
+
+    let intervalGame = setInterval(updateGame, 10); // Update game every 50ms
+
+    let intervalArrows = setInterval(moveArrows, 100)
 </script>
+
 </body>
 </html>
